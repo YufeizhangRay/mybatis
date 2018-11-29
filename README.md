@@ -1,14 +1,14 @@
 # mybatis1.0
   
-手写简易版mybatis框架  
+## 手写简易版mybatis框架  
   
-Mybatis的部分组件及查询运行原理源码分析  
+### Mybatis的部分组件及查询运行原理源码分析  
   
-SqlSession  
+#### SqlSession  
 SqlSession为所有的对外操作的出口，地位极高。其中包含两个重要属性，分别是Executor与Configuration。 
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/Mybatis%E6%9E%B6%E6%9E%84%E5%9B%BE.jpeg)   
   
-Configuration  
+#### Configuration  
 持有Mapper，getMapper()方法传入一个Mapper类作为参数，通过MapperProxyFactory类的newInstance()方法获取MapperProxy(此类实现了InvocationHandler接口)的实例，然后再以此实例作为参数，通过动态代理方法来获得Mapper的代理对象。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/MapperProxyFactory.jpeg)  
   
@@ -21,7 +21,7 @@ Configuration
 而methodCache本身又是在MapperProxyFactory类中进行初始化，然后在MapperProxy获取实例的时候作为一个参数传入)，其内部调用了SqlSession中的selectOne()方法。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/selectOne.jpeg)  
   
-Executor  
+#### Executor  
 负责执行对数据库操作的方法。上述的SqlSession的实现类DefaultSqlSession中的selectOne()方法，会调用一个selectList()方法(DefaultSqlSession类中有包含了多种selectList()的重载方法来满足多种需要)，
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/selectList.jpeg)
   
@@ -84,7 +84,8 @@ queryfromDatabase()方法将，移除最开始放置的占位符，将结果存�
   
 最后reset防止内存泄漏。  
   
-上述过程简易时序图：    
+#### 上述过程简易时序图：    
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/Mybatis%E7%AE%80%E6%98%93%E6%97%B6%E5%BA%8F%E5%9B%BE.jpeg)  
   
+#### 总结
 由源码可知，Mybatis不仅可以防止注入攻击，而且在资源的利用上也做的十分全面(缓存、连接的关闭)。底层技术依然是JDBC，但是对其进行了封装，隔绝了JDBC原有的代码操作，使开发者在进行数据库交互操作的时候更加的得心应手。
