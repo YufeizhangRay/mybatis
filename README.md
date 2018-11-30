@@ -8,7 +8,7 @@
 SqlSession为所有的对外操作的出口，地位极高。其中包含两个重要属性，分别是Executor与Configuration。 
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/Mybatis%E6%9E%B6%E6%9E%84%E5%9B%BE.jpeg)   
   
-首先我们来从最开始的代码入手，获取SqlSession，然后调用其getMapper()方法。  
+首先我们来从最开始的代码入手，以单体查询为例，获取SqlSession，然后调用其getMapper()方法。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/getMapper.jpeg)  
   
 此方法会自动跳转到SqlSession接口的实现类DefaultSqlSession的getMapper()方法，此方法会返回configuration.getMapper()方法。 
