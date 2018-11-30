@@ -8,8 +8,18 @@
 SqlSession为所有的对外操作的出口，地位极高。其中包含两个重要属性，分别是Executor与Configuration。 
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/Mybatis%E6%9E%B6%E6%9E%84%E5%9B%BE.jpeg)   
   
+首先我们来从最开始的代码入手，获取SqlSession，然后调用其getMapper()方法，  
+![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/getMapper.jpeg)  
+  
+此方法会自动跳转到SqlSession接口的实现类DefaultSqlSession的getMapper()方法，此方法会返回configuration.getMapper()方法。 
+![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/sessionGetMapper.jpeg)  
+  
 #### Configuration  
-持有Mapper，getMapper()方法传入一个Mapper类作为参数，通过MapperProxyFactory类的newInstance()方法获取MapperProxy(此类实现了InvocationHandler接口)的实例，然后再以此实例作为参数，通过动态代理方法来获得Mapper的代理对象。  
+configuration.getMapper()方法返回MapperRegistry类的getMapper()方法，  
+![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/configGetMapper.jpeg)
+![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/registryGetMapper.jpeg)  
+  
+此方法其中通过MapperProxyFactory类的newInstance()方法获取MapperProxy(此类实现了InvocationHandler接口)的实例(参数mapperInterface其实就是生成代理需要的类，也就是我们最开始在getMapper()传入的参数)，然后再以此实例作为参数，通过动态代理方法来获得Mapper的代理对象。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/MapperProxyFactory.jpeg)  
   
 此动态代理为阉割版的动态代理，正常的动态代理中，proxy中会保存有实现接口的类的target对象，invoke()方法可以将target对象和args作为参数来返回一个执行method.invoke(target,args)方法，但是MapperProxy中只有接口的类，没有其实现类(因为Mapper本身就不存在实现类，只有对应的xml文件)，无法执行method.invoke()方法。 
