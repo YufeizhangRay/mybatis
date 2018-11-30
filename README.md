@@ -74,13 +74,13 @@ handleRowValues()方法,此方法可以处理结果集中每一行中的value值
 通过handleRowValuesForSimpleResultMap()方法中的getRowValue()来获取value。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/handleRowValuesForSimpleResultMap.jpeg)  
   
-getRowValue()方法，其中调用了createResultObject()方法创建出结果对象，此时的对象的属性为null。
+getRowValue()方法，其中调用了createResultObject()方法创建出结果对象，并返回，此时的对象的属性为null。
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/getRowValue.jpeg)  
   
 createResultObject()方法。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/createResultObject.jpeg)  
   
-再调用applyAutomaticMappings()给对象填充结果，完成映射。  
+再继续向下执行到applyAutomaticMappings()方法给对象填充结果，完成映射。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/applyAutomaticMapping1.jpeg)
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/applyAutomaticMapping2.jpeg)  
   
