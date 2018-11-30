@@ -80,9 +80,12 @@ getRowValue()方法，其中调用了createResultObject()方法创建出结果�
 createResultObject()方法。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/createResultObject.jpeg)  
   
-再继续向下执行到applyAutomaticMappings()方法给对象填充结果，完成映射。  
+再继续向下执行到applyAutomaticMappings()方法，其中调用setValue()方法给对象填充结果，完成映射。    
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/applyAutomaticMapping1.jpeg)
-![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/applyAutomaticMapping2.jpeg)  
+![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/applyAutomaticMapping2.jpeg)   
+  
+setValue()方法。  
+![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/setValue.jpeg)  
   
 调用storeObject()方法进行保存。 
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/stroeObject.jpeg)  
