@@ -27,17 +27,17 @@ configuration.getMapper()方法返回MapperRegistry类的getMapper()方法，
 此动态代理为阉割版的动态代理，正常的动态代理中，proxy中会保存有实现接口的类的target对象，invoke()方法可以将target对象和args作为参数来返回一个执行method.invoke(target,args)方法，但是MapperProxy中只有接口的类，没有其实现类(因为Mapper本身就不存在实现类，只有对应的xml文件)，无法执行method.invoke()方法。由于是动态代理，每次我们操作任何方法时，都会触发代理类的invoke()方法，此方法会返回mapperMethod.execute()方法(mapperMethod是从methodCache这个ConcurrentHashMap中取出来的，而methodCache本身又是在MapperProxyFactory类中进行初始化，然后在MapperProxy获取实例的时候作为一个参数传入)。   
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/invoke.jpeg)  
   
-MapperMethod类的execute()方法。  
+MapperMethod类的execute()方法，其内部调用了SqlSession中的selectOne()方法。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/execute.jpeg)  
-  
-其内部调用了SqlSession中的selectOne()方法。  
-![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/selectOne.jpeg)  
-  
+      
 #### Executor  
 负责执行对数据库操作的方法。上述的SqlSession的实现类DefaultSqlSession中的selectOne()方法，会调用一个selectList()方法(DefaultSqlSession类中有包含了多种selectList()的重载方法来满足多种需要)，
-![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/selectList.jpeg)
+![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/selectOne.jpeg)   
   
-selectList()方法中的executor.query()会执行操作数据库的方法。执行query()方法的实际上是Executor的实现类CachingExecutor，此类会判断是否带有缓存，若没有则会用一个名为delegate的SimpleExecutor实体类(这里用到了装饰器模式)的父类BeasExecutor的query()方法。  
+selectList()方法中的executor.query()会执行操作数据库的方法。执行query()方法的实际上是Executor的实现类CachingExecutor，  
+![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/selectList.jpeg)  
+  
+此类会判断是否带有缓存，若没有则会用一个名为delegate的SimpleExecutor实体类(这里用到了装饰器模式)的父类BeasExecutor的query()方法。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/querydelegate.jpeg)
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/queryFather.jpeg)  
   
