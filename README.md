@@ -24,7 +24,7 @@ configuration.getMapper()方法返回MapperRegistry类的getMapper()方法。
 newInstance()方法中，在MapperProxyFactory的构造函数中有一个mapperInterface参数，而mapperInterface其实就是生成代理需要的类，也就是我们最开始在getMapper()传入的参数TestMapper.class。以刚刚获得的实例作为参数，通过动态代理方法来获得Mapper的代理对象。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/MapperProxyFactory.jpeg)  
   
-此动态代理为阉割版的动态代理，正常的动态代理中，proxy中会保存有实现接口的类的target对象，invoke()方法可以将target对象和args作为参数来返回一个执行method.invoke(target,args)方法，但是MapperProxy中只有接口的类，没有其实现类(因为Mapper本身就不存在实现类，只有对应的xml文件)，无法执行method.invoke()方法。由于是动态代理，每次我们操作任何方法时，都会触发代理类的invoke()方法，此方法会返回mapperMethod.execute()方法(mapperMethod是从methodCache这个ConcurrentHashMap中取出来的，而methodCache本身又是在MapperProxyFactory类中进行初始化，然后在MapperProxy获取实例的时候作为一个参数传入)。   
+此动态代理为阉割版的动态代理，正常的动态代理中，proxy中会保存有实现接口的类的target对象，invoke()方法可以将target对象和args作为参数来返回一个执行method.invoke(target,args)方法，但是MapperProxy中只有接口的类，没有其实现类(因为Mapper本身就不存在实现类，只有对应的xml文件)，无法执行method.invoke()方法。由于是动态代理，每次我们调用被代理类的任何方法时，都会触发代理类的invoke()方法，此方法会返回mapperMethod.execute()方法(mapperMethod是从methodCache这个ConcurrentHashMap中取出来的，而methodCache本身又是在MapperProxyFactory类中进行初始化，然后在MapperProxy获取实例的时候作为一个参数传入)。   
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/invoke.jpeg)  
   
 MapperMethod类的execute()方法，其内部调用了SqlSession中的selectOne()方法。  
@@ -37,7 +37,7 @@ MapperMethod类的execute()方法，其内部调用了SqlSession中的selectOne(
 selectList()方法中的executor.query()会执行操作数据库的方法。执行query()方法的实际上是Executor的实现类CachingExecutor。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/selectList.jpeg)  
   
-此类会判断是否带有缓存，若没有则会用一个名为delegate的SimpleExecutor实体类的父类BeasExecutor的query()方法。  
+此类会判断是否带有缓存，若没有则会用一个名为delegate的SimpleExecutor实体类的父类BeasExecutor的query()方法(委派模式)。  
 ![](https://github.com/YufeizhangRay/image/blob/master/Mybatis/querydelegate.jpeg)  
   
 此方法若判断为没有缓存，则会调用queryfromDatabase()方法，并给methodCache插入一个占位符，后面的doQuery()方法会再次返回SimpleExecutor中。  
